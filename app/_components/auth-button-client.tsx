@@ -1,9 +1,16 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import {
+  Session,
+  createClientComponentClient,
+} from "@supabase/auth-helpers-nextjs";
 
-export const AuthButton = () => {
+export default function AuthButtonClient({
+  session,
+}: {
+  session: Session | null;
+}) {
   const supabase = createClientComponentClient();
   const router = useRouter();
 
@@ -26,10 +33,10 @@ export const AuthButton = () => {
     console.log("clicked");
   };
 
-  return (
-    <>
-      <button onClick={handleSignIn}>Login</button>
-      <button onClick={handleSignOut}>Logout</button>
-    </>
+  return session ? (
+    // Sessionがあるかどうかで認証ボタンを切り替える
+    <button onClick={handleSignOut}>Logout</button>
+  ) : (
+    <button onClick={handleSignIn}>Login</button>
   );
-};
+}
