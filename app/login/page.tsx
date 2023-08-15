@@ -5,7 +5,7 @@ import AuthButtonClient from "../_components/auth-button-client";
 
 // ログイン用の非同期関数
 export default async function Login() {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerComponentClient<Database>({ cookies });
 
   const {
     data: { session },

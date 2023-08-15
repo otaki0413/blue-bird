@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 
 // サーバーコンポーネントのため、非同期関数として定義可能
 export default async function Home() {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerComponentClient<Database>({ cookies });
   const {
     data: { session },
   } = await supabase.auth.getSession();

@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
-  const supabase = createMiddlewareClient({ req, res });
+  const supabase = createMiddlewareClient<Database>({ req, res });
   // セッションが期限切れであれば更新
   await supabase.auth.getSession();
 

@@ -4,7 +4,7 @@ import AuthButtonClient from "./auth-button-client";
 
 // 非同期サーバーコンポーネント
 export default async function AuthButtonServer() {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = createServerComponentClient<Database>({ cookies });
 
   // ユーザーセッションをSupabaseからフェッチする
   const {

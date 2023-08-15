@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
    * そして今後Supabaseにリクエストする際のCookieとして設定
    */
   if (code) {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = createRouteHandlerClient<Database>({ cookies });
     await supabase.auth.exchangeCodeForSession(code);
   }
 
