@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import AuthButtonServer from "./_components/auth-button-server";
 import { redirect } from "next/navigation";
 import NewTweet from "./_components/new-tweet";
+import Likes from "./_components/likes";
 
 // サーバーコンポーネントのため、非同期関数として定義可能
 export default async function Home() {
@@ -16,15 +17,35 @@ export default async function Home() {
     redirect("/login");
   }
 
-  const { data: tweets } = await supabase
+  const { data } = await supabase
     .from("tweets")
-    .select("*, profiles(*)");
+    .select("*, profiles(*), likes(*)");
+
+  // 各ツイートに対して変換を行い、下記のプロパティを追加した新しい配列を返す
+  // user_has_liked_tweet: いいねをしているかどうか
+  // likes: いいねの数
+  // 取得データがnullまたはundefinedの場合、空配列を返す
+  const tweets =
+    data?.map((tweet) => ({
+      ...tweet,
+      user_has_liked_tweet: tweet.likes.find(
+        (like) => like.user_id === session.user.id
+      ),
+      likes: tweet.likes.length,
+    })) ?? [];
 
   return (
     <>
       <AuthButtonServer />
       <NewTweet />
-      <pre>{JSON.stringify(tweets, null, 2)}</pre>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
+      {tweets.map((tweet) => (
+        <div key={tweet.id}>
+          <p>{tweet.profiles?.name}</p>
+          <p>{tweet.title}</p>
+          <Likes tweet={tweet} />
+        </div>
+      ))}
     </>
   );
 }
