@@ -19,7 +19,8 @@ export default async function Home() {
 
   const { data } = await supabase
     .from("tweets")
-    .select("*, author: profiles(*), likes(user_id)");
+    .select("*, author: profiles(*), likes(user_id)")
+    .order("created_at", { ascending: false });
 
   // 各ツイートに対して変換を行い、下記のプロパティを追加した新しい配列を返す
   // user_has_liked_tweet: いいねをしているかどうか
@@ -30,16 +31,19 @@ export default async function Home() {
       ...tweet,
       author: Array.isArray(tweet.author) ? tweet.author[0] : tweet.author,
       user_has_liked_tweet: !!tweet.likes.find(
-        (like) => like.user_id === session.user.id
+        (like) => like.user_id === session.user.id,
       ),
       likes: tweet.likes.length,
     })) ?? [];
 
   return (
-    <>
-      <AuthButtonServer />
-      <NewTweet />
+    <div className="mx-auto w-full max-w-2xl">
+      <div className="flex justify-between border border-t-0 border-gray-800 px-4 py-6">
+        <h1 className="text-xl font-bold">Home</h1>
+        <AuthButtonServer />
+      </div>
+      <NewTweet user={session.user} />
       <Tweets tweets={tweets} />
-    </>
+    </div>
   );
 }

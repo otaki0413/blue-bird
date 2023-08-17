@@ -2,6 +2,7 @@
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation";
+import { IconHeart } from "@tabler/icons-react";
 
 export default function Likes({
   tweet,
@@ -49,5 +50,24 @@ export default function Likes({
       router.refresh();
     }
   };
-  return <button onClick={handleLikes}>{tweet.likes} Likes</button>;
+  return (
+    <button onClick={handleLikes} className="group flex items-center">
+      <IconHeart
+        width={16}
+        height={16}
+        className={`group-hover:fill-red-600 group-hover:stroke-red-600 ${
+          tweet.user_has_liked_tweet
+            ? "fill-red-600 stroke-red-600"
+            : "fill-none stroke-gray-600"
+        }`}
+      />
+      <span
+        className={`ml-2 text-sm group-hover:text-red-600 ${
+          tweet.user_has_liked_tweet ? "text-red-600" : "text-gray-600"
+        }`}
+      >
+        {tweet.likes}
+      </span>
+    </button>
+  );
 }

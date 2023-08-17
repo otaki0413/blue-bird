@@ -1,7 +1,8 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import AuthButtonClient from "../_components/auth-button-client";
+
+import GithubButton from "../_components/github-button";
 
 // ログイン用の非同期関数
 export default async function Login() {
@@ -16,5 +17,9 @@ export default async function Login() {
     redirect("/");
   }
 
-  return <AuthButtonClient session={session} />;
+  return (
+    <div className="flex flex-1 flex-col items-center justify-center">
+      <GithubButton />
+    </div>
+  );
 }

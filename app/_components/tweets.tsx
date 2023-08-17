@@ -4,6 +4,7 @@ import { useEffect, experimental_useOptimistic as useOptimistic } from "react";
 import { useRouter } from "next/navigation";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Likes from "./likes";
+import Image from "next/image";
 
 export default function Tweets({ tweets }: { tweets: TweetWithAuthor[] }) {
   const [optimisticTweets, addOptimisticTweet] = useOptimistic<
@@ -13,7 +14,7 @@ export default function Tweets({ tweets }: { tweets: TweetWithAuthor[] }) {
     const newOptimisticTweets = [...currentOptimisticTweets];
     // 古いツイートのインデックスを取得
     const index = newOptimisticTweets.findIndex(
-      (tweet) => tweet.id === newTweet.id
+      (tweet) => tweet.id === newTweet.id,
     );
     // 新しいツイートに置換
     newOptimisticTweets[index] = newTweet;
@@ -37,7 +38,7 @@ export default function Tweets({ tweets }: { tweets: TweetWithAuthor[] }) {
         (payload) => {
           console.log({ payload });
           router.refresh();
-        }
+        },
       )
       .subscribe();
 
@@ -47,10 +48,29 @@ export default function Tweets({ tweets }: { tweets: TweetWithAuthor[] }) {
   }, [supabase, router]);
 
   return optimisticTweets.map((tweet) => (
-    <div key={tweet.id}>
-      <p>{tweet.author.name}</p>
-      <p>{tweet.title}</p>
-      <Likes tweet={tweet} addOptimisticTweet={addOptimisticTweet} />
+    <div
+      key={tweet.id}
+      className="flex border border-t-0 border-gray-800 px-4 py-8"
+    >
+      <div className="h-12 w-12">
+        <Image
+          src={tweet.author.avatar_url}
+          alt="tweet user avatar"
+          width={48}
+          height={48}
+          className="rounded-full"
+        />
+      </div>
+      <div className="ml-4">
+        <p>
+          <span className="font-bold">{tweet.author.name}</span>
+          <span className="ml-2 text-sm text-gray-400">
+            {tweet.author.name}
+          </span>
+        </p>
+        <p>{tweet.title}</p>
+        <Likes tweet={tweet} addOptimisticTweet={addOptimisticTweet} />
+      </div>
     </div>
   ));
 }

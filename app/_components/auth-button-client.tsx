@@ -35,8 +35,12 @@ export default function AuthButtonClient({
 
   return session ? (
     // Sessionがあるかどうかで認証ボタンを切り替える
-    <button onClick={handleSignOut}>Logout</button>
+    <button className="text-sm text-gray-400" onClick={handleSignOut}>
+      Logout
+    </button>
   ) : (
-    <button onClick={handleSignIn}>Login</button>
+    <button className="text-sm text-gray-400" onClick={handleSignIn}>
+      Login
+    </button>
   );
 }
