@@ -3,7 +3,6 @@ import { cookies } from "next/headers";
 import AuthButtonServer from "./_components/auth-button-server";
 import { redirect } from "next/navigation";
 import NewTweet from "./_components/new-tweet";
-import Likes from "./_components/likes";
 import Tweets from "./_components/tweets";
 
 // サーバーコンポーネントのため、非同期関数として定義可能
