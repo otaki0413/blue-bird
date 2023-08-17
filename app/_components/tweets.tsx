@@ -1,5 +1,8 @@
 "use client";
-import { experimental_useOptimistic as useOptimistic } from "react";
+
+import { useEffect, experimental_useOptimistic as useOptimistic } from "react";
+import { useRouter } from "next/navigation";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import Likes from "./likes";
 
 export default function Tweets({ tweets }: { tweets: TweetWithAuthor[] }) {
@@ -16,6 +19,32 @@ export default function Tweets({ tweets }: { tweets: TweetWithAuthor[] }) {
     newOptimisticTweets[index] = newTweet;
     return newOptimisticTweets;
   });
+
+  // Supabaseクライアント生成
+  const supabase = createClientComponentClient<Database>();
+  const router = useRouter();
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("realtime-tweets")
+      .on(
+        "postgres_changes",
+        {
+          event: "*", // 全てのイベントを監視
+          schema: "public", // スキーマ名
+          table: "tweets", // テーブル名
+        },
+        (payload) => {
+          console.log({ payload });
+          router.refresh();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase, router]);
 
   return optimisticTweets.map((tweet) => (
     <div key={tweet.id}>
