@@ -1,8 +1,9 @@
 import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-
 import GithubButton from "../_components/github-button";
+
+export const dynamic = "force-dynamic";
 
 // ログイン用の非同期関数
 export default async function Login() {

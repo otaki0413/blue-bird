@@ -2,6 +2,8 @@ import { User, createServerActionClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from "next/headers";
 import Image from "next/image";
 
+export const dynamic = "force-dynamic";
+
 // 新規投稿用のフォームコンポーネント
 export default function NewTweet({ user }: { user: User }) {
   // フォームの送信時に実行される関数

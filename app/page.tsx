@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import NewTweet from "./_components/new-tweet";
 import Tweets from "./_components/tweets";
 
+export const dynamic = "force-dynamic";
+
 // サーバーコンポーネントのため、非同期関数として定義可能
 export default async function Home() {
   const supabase = createServerComponentClient<Database>({ cookies });
