@@ -19,7 +19,7 @@ export default async function Home() {
 
   const { data } = await supabase
     .from("tweets")
-    .select("*, profiles(*), likes(*)");
+    .select("*, author: profiles(*), likes(user_id)");
 
   // 各ツイートに対して変換を行い、下記のプロパティを追加した新しい配列を返す
   // user_has_liked_tweet: いいねをしているかどうか
@@ -28,6 +28,7 @@ export default async function Home() {
   const tweets =
     data?.map((tweet) => ({
       ...tweet,
+      author: Array.isArray(tweet.author) ? tweet.author[0] : tweet.author,
       user_has_liked_tweet: !!tweet.likes.find(
         (like) => like.user_id === session.user.id
       ),
@@ -41,7 +42,7 @@ export default async function Home() {
       <pre>{JSON.stringify(data, null, 2)}</pre>
       {tweets.map((tweet) => (
         <div key={tweet.id}>
-          <p>{tweet.profiles?.name}</p>
+          <p>{tweet.author.name}</p>
           <p>{tweet.title}</p>
           <Likes tweet={tweet} />
         </div>
